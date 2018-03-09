@@ -20,6 +20,7 @@ public class LRUCache {
     public LRUCache(int capacity) {
         this.capatity = capacity;
         map  = new HashMap<Integer, Node>();
+        //init head and tail nodes.
         head = new Node(0,0);
         tail = new Node(0,0);
         head.next = tail;
@@ -32,7 +33,7 @@ public class LRUCache {
     public int get(int key) {
         if(map.containsKey(key)){
             Node node = map.get(key);
-            deleteNode(node);
+            removeNode(node);
             add2head(node);
             return node.value;
         }
@@ -43,7 +44,7 @@ public class LRUCache {
         if (map.containsKey(key)){
             Node node = map.get(key);
             node.value = value;
-            deleteNode(node);
+            removeNode(node);
             add2head(node);
         }else{
             Node node = new Node(key,value);
@@ -53,18 +54,26 @@ public class LRUCache {
                 count++;
             }else{
                 map.remove(tail.pre.key);
-                deleteNode(tail.pre);
+                removeNode(tail.pre);
                 add2head(node);
             }
         }
 
     }
 
-    private void deleteNode(Node node){
+    /**
+     * remove an existing node from the linked list.
+     * @param node
+     */
+    private void removeNode(Node node){
         node.pre.next = node.next;
         node.next.pre = node.pre;
     }
 
+    /**
+     * always add the new node right after head
+     * @param node
+     */
     private void add2head(Node node){
         node.next = head.next;
         node.next.pre = node;
